@@ -2,13 +2,13 @@
     <div class="comment">
         <h4>发表评论</h4>
         <hr>
-        <textarea placeholder="请输入想要BB的内容(最多吐槽120个字)" maxlength="120"></textarea>
-        <mt-button type="primary" size="large">发表评论</mt-button>
+        <textarea placeholder="请输入想要BB的内容(最多吐槽120个字)" maxlength="120" v-model="msg"></textarea>
+        <mt-button type="primary" size="large" @click="postComment">发表评论</mt-button>
 
         <div class="cmt-list">
-            <div class="cmt-item" v-for="item in comments" :key="item.id">
+            <div class="cmt-item" v-for="(item,index) in comments" :key="index">
                 <div class="cmt-title">
-                    第{{ item.artid }}楼 &nbsp;用户:{{ item.user_name }}&nbsp;发表时间:{{ item.add_time }}
+                    第{{ index+1 }}楼 &nbsp;用户:{{ item.user_name }}&nbsp;发表时间:{{ item.add_time }}
                 </div>
                 <div class="cmt-body">
                     {{ item.content }}
@@ -21,31 +21,57 @@
 </template>
 
 <script>
+import { Toast } from "mint-ui";
 export default {
   data() {
     return {
-        pageindex:1,
-       comments:[]
+      pageindex: 1,
+      comments: [],
+      msg: ""
     };
   },
-  created(){
-      this.getComment()
+  created() {
+    this.getComment();
   },
-  props:['id'],
-  methods:{
-      getComment(){
-          this.$http.get("api/getcomments/"+this.id+"?pageindex="+this.pageindex+"").then(res=>{
-            //   console.log(res.body)
-              if(res.body.status === 0){
-                //   this.comments = res.body.message
-                this.comments = this.comments.concat(res.body.message)
-              }
+  props: ["id"],
+  methods: {
+    getComment() {
+      this.$http
+        .get("api/getcomments/" + this.id + "?pageindex=" + this.pageindex + "")
+        .then(res => {
+          // console.log(res.body)
+          if (res.body.status === 0) {
+            //   this.comments = res.body.message
+            this.comments = this.comments.concat(res.body.message);
+          }
+        });
+    },
+    more() {
+      this.pageindex++;
+      this.getComment();
+    },
+    postComment() {
+      if (this.msg.trim().length === 0) {
+        Toast("请输入评论内容");
+      } else {
+        this.$http
+          .post("api/postcomment/" + this.id, {
+            content: this.msg
           })
-      },
-      more(){
-          this.pageindex++
-          this.getComment()
+          .then(res => {
+            // console.log(res);
+            if (res.body.status === 0) {
+              // 1. 拼接出一个评论对象
+              var cmt = {
+                user_name: "匿名用户",
+                content: this.msg.trim()
+              };
+              this.comments.unshift(cmt);
+              this.msg = "";
+            }
+          });
       }
+    }
   }
 };
 </script>

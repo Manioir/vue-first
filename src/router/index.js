@@ -7,6 +7,7 @@ import Shopcar from '../components/tabbar/Shopcar.vue'
 import Member from '../components/tabbar/Member.vue'
 import Newslist from '../components/news/Newslist.vue'
 import Newsinfo from '../components/news/Newsinfo.vue'
+import Photolist from '../components/photo/Photolist.vue'
 
 Vue.use(Router)
 
@@ -18,7 +19,8 @@ export default new Router({
     {path:'/shopcar',component:Shopcar},
     {path:'/member',component:Member},
     {path:'/home/Newslist',component:Newslist},
-    {path:'/home/Newsinfo/:id',component:Newsinfo}
+    {path:'/home/Newsinfo/:id',component:Newsinfo},
+    {path:'/home/photolist',component:Photolist}
   ],
   linkActiveClass:'mui-active'
 })
