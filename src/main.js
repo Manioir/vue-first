@@ -9,7 +9,12 @@ import './lib/dist/mui/css/mui.min.css'
 import './lib/dist/mui/css/icons-extra.css'
 // 引入 vue-resource 
 import vueResource from 'vue-resource'
-
+// 导入时间格式化的插件
+import moment from 'moment'
+// 定义全局的过滤器
+Vue.filter('dateFormat',function(dataStr,parent="YYYY-MM-DD HH:mm:ss"){
+  return moment(dataStr).format(parent)
+})
 // 注册组件
 Vue.use(Mint)
 

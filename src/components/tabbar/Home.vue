@@ -12,6 +12,7 @@
 </template>
 
 <script>
+// 导入提示信息失败
 import { Toast } from "mint-ui";
 import MuiGird from '../../muicomponents/MuiGird.vue'
 export default {
